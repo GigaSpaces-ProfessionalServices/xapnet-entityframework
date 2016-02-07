@@ -7,6 +7,14 @@ namespace GigaPro.Persistency.EntityFramework.Extensions
 {
     public static class QueryableExtensions
     {
+        /// <summary>
+        /// Performs a paged query against the database.
+        /// </summary>
+        /// <param name="source">The sorce query.</param>
+        /// <param name="entity">The entity to query against.</param>
+        /// <param name="skip">The number of records to skip in the query.</param>
+        /// <param name="batch">The number of records to return in the query.</param>
+        /// <returns>The query results.</returns>
         public static IList LoadPage(this IQueryable source, ExtendedEntityType entity, int skip, int batch)
         {
             var output = source;
@@ -50,6 +58,11 @@ namespace GigaPro.Persistency.EntityFramework.Extensions
             return Queryable.Take((dynamic) source, batch);
         }
 
+        /// <summary>
+        /// Executes the query and adds the results to an <see cref="IList"/>, thus closing the database reader.
+        /// </summary>
+        /// <param name="source">The database query.</param>
+        /// <returns>The result sets.</returns>
         public static IList ToList(this IQueryable source)
         {
             IList output = new ArrayList();

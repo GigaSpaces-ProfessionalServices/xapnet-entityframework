@@ -12,6 +12,14 @@ namespace GigaPro.Persistency.EntityFramework.Extensions
     {
         private static readonly IList<IQueryHandler> QueryHandlers = new List<IQueryHandler> { new SimpleFromQueryHandler()};
          
+        /// <summary>
+        /// Translates a <see cref="Query"/> and then performs the translation against the EntityFramework database context.
+        /// </summary>
+        /// <param name="context">The EntityFramework database context.</param>
+        /// <param name="dbContextTypes">A list of entity types for use during translation.</param>
+        /// <param name="query">The GigaSpaces query to translate.</param>
+        /// <param name="batchSize">The batch size for querying the database.</param>
+        /// <returns></returns>
         public static IDataEnumerator GigaSpaceQuery(this DbContext context, IEnumerable<ExtendedEntityType> dbContextTypes, Query query, int batchSize)
         {
 
@@ -42,11 +50,6 @@ namespace GigaPro.Persistency.EntityFramework.Extensions
             }
 
             return builder.ToString();
-        }
-
-        public static void Merge(this DbContext context, object entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }
