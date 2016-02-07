@@ -4,8 +4,10 @@ using System.Data.Entity;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Infrastructure;
 using System.Reflection;
+using System.Text;
 using GigaPro.Persistency.EntityFramework.Collections;
 using GigaPro.Persistency.EntityFramework.Configuration;
+using GigaPro.Persistency.EntityFramework.Extensions;
 using GigaSpaces.Core.Persistency;
 
 namespace GigaPro.Persistency.EntityFramework
@@ -14,7 +16,7 @@ namespace GigaPro.Persistency.EntityFramework
     {
         private DbContext _dbContext;
         private IEnumerable<ExtendedEntityType> _dbContextTypes;
-        private int _initialLoadBatchSize = Constants.Defaults.InitialLoadBatchSize;
+        private int _loadBatchSize = Constants.Defaults.LoadBatchSize;
         private int _initialLoadThreadPoolSize = Constants.Defaults.InitialLoadThreadPoolSize;
         private Assembly _modelLibrary;
 
@@ -37,8 +39,8 @@ namespace GigaPro.Persistency.EntityFramework
                 var connectionString = GetProperty(Constants.ConfigurationKeys.ConnectionString);
                 var modelContextConfigurer = InstantiateClass(GetProperty(Constants.ConfigurationKeys.ConfigurerClass));
 
-                _initialLoadBatchSize = GetIntProperty(Constants.ConfigurationKeys.InitialLoadBatchSize,
-                    Constants.Defaults.InitialLoadBatchSize);
+                _loadBatchSize = GetIntProperty(Constants.ConfigurationKeys.LoadBatchSize,
+                    Constants.Defaults.LoadBatchSize);
                 _initialLoadThreadPoolSize = GetIntProperty(Constants.ConfigurationKeys.InitialLoadThreadPoolSize,
                     Constants.Defaults.InitialLoadThreadPoolSize);
 
@@ -85,16 +87,15 @@ namespace GigaPro.Persistency.EntityFramework
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var dbContextType in _dbContextTypes)
             {
-                enumerators.Add(new EntityFrameworkBatchedEnumerator(_dbContext, dbContextType, _initialLoadBatchSize));
+                enumerators.Add(new EntityFrameworkBatchedEnumerator(_dbContext.Set(dbContextType.Type), dbContextType, _loadBatchSize));
             }
             
-            return new ConcurrentMultiDataEnumerator(enumerators, _initialLoadBatchSize, _initialLoadThreadPoolSize);
+            return new ConcurrentMultiDataEnumerator(enumerators, _loadBatchSize, _initialLoadThreadPoolSize);
         }
 
         public override IDataEnumerator GetEnumerator(Query query)
         {
-            throw new NotImplementedException();
-//            return new EntityFrameworkBatchedEnumerator(_dbContext.GigaSpaceQuery(query));
+            return _dbContext.GigaSpaceQuery(_dbContextTypes, query, _loadBatchSize);
         }
 
         public override void ExecuteBulk(IList<BulkItem> bulk)

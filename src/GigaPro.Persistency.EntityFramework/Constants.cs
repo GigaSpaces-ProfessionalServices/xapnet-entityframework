@@ -4,7 +4,7 @@
     {
         public static class Defaults
         {
-            public const int InitialLoadBatchSize = 100;
+            public const int LoadBatchSize = 100;
             public const int InitialLoadThreadPoolSize = 10;
         }
 
@@ -13,7 +13,7 @@
             public const string InitialLoadThreadPoolSize = "InitialLoadThreadPoolSize";
             public const string ConnectionString = "connectionString";
             public const string ConfigurerClass = "configurerClass";
-            public const string InitialLoadBatchSize = "InitialLoadBatchSize";
+            public const string LoadBatchSize = "LoadBatchSize";
         }
     }
 }

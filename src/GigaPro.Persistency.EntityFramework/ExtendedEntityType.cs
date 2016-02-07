@@ -39,5 +39,10 @@ namespace GigaPro.Persistency.EntityFramework
             Type = type;
             EdmEntityType = edmEntityType;
         }
+
+        public bool IsType(string typeFullName)
+        {
+            return string.Equals(typeFullName, Type.FullName, StringComparison.InvariantCultureIgnoreCase);
+        }
     }
 }
