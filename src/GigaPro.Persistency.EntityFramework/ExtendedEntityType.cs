@@ -33,14 +33,14 @@ namespace GigaPro.Persistency.EntityFramework
                     for (var x = 0; x < edmKeyProperties.Count; x++)
                     {
                         var edmProperty = edmKeyProperties[x];
-                        output[x] = Type.GetProperty(edmProperty.Name, BindingFlags.Public | BindingFlags.Instance);
+                        output[x] = GetPropertyInfo(edmProperty.Name);
                     }
 
                     _keyProperties = output;
                 }
 
                 var propertyOutput = new PropertyInfo[_keyProperties.Length];
-                propertyOutput.CopyTo(propertyOutput, 0);
+                _keyProperties.CopyTo(propertyOutput, 0);
                 return propertyOutput;
             }
         }
@@ -66,6 +66,18 @@ namespace GigaPro.Persistency.EntityFramework
             var workingCopy = typeFullName ?? string.Empty;
 
             return string.Equals(workingCopy.Trim(), Type.FullName, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public PropertyInfo GetPropertyInfo(string propertyName)
+        {
+            var propertyInfo = Type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+
+            if (propertyInfo == null)
+            {
+                 throw new Exception($"Property '{propertyName}' doesn't exist.");
+            }
+
+            return propertyInfo;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using GigaPro.Persistency.EntityFramework.Queries.Domain;
 using GigaSpaces.Core.Persistency;
@@ -19,9 +20,11 @@ namespace GigaPro.Persistency.EntityFramework.Queries
             var entityName = components[1];
             foundType = null;
 
+
+            IList<EqualityExpression> expressions = new List<EqualityExpression>();
+
             if (components.Length > 2)
             {
-                IList<EqualityExpression> expressions = new List<EqualityExpression>();
 
                 var position = 3;
                 while (position < components.Length)
@@ -35,7 +38,66 @@ namespace GigaPro.Persistency.EntityFramework.Queries
             FindType(dbEntities, ref foundType, entityName);
             ThrowIfTypeNotFound(foundType, entityName);
 
-            throw new NotImplementedException();
+            IQueryable table = context.Set(foundType.Type);
+
+            if (expressions.Count > 0)
+                table = BuildQuery(table, foundType, expressions, query.Parameters);
+
+            return table;
+        }
+
+        private IQueryable BuildQuery(IQueryable table, ExtendedEntityType entityType, IList<EqualityExpression> expressions, object[] parameters)
+        {
+            var workingTable = table;
+
+            var parameterCount = 0;
+            var firstExpression = true;
+            foreach (var ex in expressions)
+            {
+                var parameterExpression = Expression.Parameter(entityType.Type, "p");
+                var memberExpression = Expression.Property(parameterExpression, entityType.GetPropertyInfo(ex.LeftHand));
+
+                Expression rightHandSide = null;
+                if (ex.RightHand is ParameterRightHand)
+                {
+                    rightHandSide = Expression.Constant(parameters[parameterCount]);
+                    parameterCount++;
+                }
+
+                Expression languageExpression = null;
+
+                switch (ex.Operator)
+                {
+                    case Operators.Equals:
+                        languageExpression = Expression.Equal(memberExpression, rightHandSide);
+                        break;
+                    case Operators.NotEquals:
+                        break;
+                    case Operators.GreaterThan:
+                        break;
+                    case Operators.LessThan:
+                        break;
+                    case Operators.GreaterThanOrEqual:
+                        break;
+                    case Operators.LessThanOrEqual:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                if (firstExpression)
+                {
+                    var lambdaExpression = Expression.Lambda(languageExpression, parameterExpression);
+                    workingTable = Queryable.Where((dynamic)workingTable, (dynamic)lambdaExpression);
+                    firstExpression = false;
+                }
+                else
+                {
+                    // TODO:
+                }
+            }
+
+            return workingTable;
         }
 
         private static int EvaluateComponent(int position, string[] components, EqualityExpression equalityExpression)
@@ -73,8 +135,6 @@ namespace GigaPro.Persistency.EntityFramework.Queries
                 }
                 else
                 {
-                    modifiedPosition += 1;
-
                     equalityExpression.Operator = ParseOperator(components[modifiedPosition]);
 
                     modifiedPosition += 1;

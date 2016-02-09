@@ -27,7 +27,7 @@ namespace TestConsole
 
             edfs.Init(properties);
 
-            var dataEnumerator = edfs.GetEnumerator(new Query(null, "FROM TestConsole.Models.TestDataSet "));
+            var dataEnumerator = edfs.GetEnumerator(new Query(new object[] { 26 }, "FROM TestConsole.Models.TestDataSet where Id = ?"));
 
             while(dataEnumerator.MoveNext())
             {
