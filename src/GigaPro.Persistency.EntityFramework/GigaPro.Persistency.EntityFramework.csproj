@@ -63,6 +63,7 @@
     <Compile Include="EntityFrameworkExternalDataSource.cs" />
     <Compile Include="ExtendedEntityType.cs" />
     <Compile Include="Extensions\DbContextExtensions.cs" />
+    <Compile Include="Extensions\IEnumerable`ExtendedEntityType.cs" />
     <Compile Include="Extensions\QueryableExtensions.cs" />
     <Compile Include="GigaSpacesDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,7 +71,6 @@
     <Compile Include="Queries\Domain\EqualityExpression.cs" />
     <Compile Include="Queries\Domain\Operators.cs" />
     <Compile Include="Queries\Domain\ParameterRightHand.cs" />
-    <Compile Include="Queries\IQueryHandler.cs" />
     <Compile Include="Queries\Domain\LogicalOperator.cs" />
     <Compile Include="Queries\Domain\NotNullRightHand.cs" />
     <Compile Include="Queries\Domain\NullRightHand.cs" />

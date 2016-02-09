@@ -20,7 +20,6 @@ namespace GigaPro.Persistency.EntityFramework.Extensions
         /// <returns></returns>
         public static IDataEnumerator GigaSpaceQuery(this DbContext context, IEnumerable<ExtendedEntityType> dbContextTypes, Query query, int batchSize)
         {
-
             ExtendedEntityType targetType;
             return new EntityFrameworkBatchedEnumerator(QueryHandler.Handle(query, context, dbContextTypes, out targetType), targetType, batchSize);
         }

@@ -4,7 +4,6 @@ using System.Data.Entity;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Infrastructure;
 using System.Reflection;
-using System.Text;
 using GigaPro.Persistency.EntityFramework.Collections;
 using GigaPro.Persistency.EntityFramework.Configuration;
 using GigaPro.Persistency.EntityFramework.Extensions;
