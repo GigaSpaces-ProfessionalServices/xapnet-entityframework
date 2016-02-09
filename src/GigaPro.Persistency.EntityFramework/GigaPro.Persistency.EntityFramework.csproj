@@ -68,14 +68,6 @@
     <Compile Include="GigaSpacesDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\ComplexQueryHandler.cs" />
-    <Compile Include="Queries\Domain\EqualityExpression.cs" />
-    <Compile Include="Queries\Domain\Operators.cs" />
-    <Compile Include="Queries\Domain\ParameterRightHand.cs" />
-    <Compile Include="Queries\Domain\LogicalOperator.cs" />
-    <Compile Include="Queries\Domain\NotNullRightHand.cs" />
-    <Compile Include="Queries\Domain\NullRightHand.cs" />
-    <Compile Include="Queries\Domain\RightHand.cs" />
-    <Compile Include="Queries\Domain\ValueRightHand.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
