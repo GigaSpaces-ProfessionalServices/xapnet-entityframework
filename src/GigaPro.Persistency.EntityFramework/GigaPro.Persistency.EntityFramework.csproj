@@ -67,7 +67,6 @@
     <Compile Include="Extensions\QueryableExtensions.cs" />
     <Compile Include="GigaSpacesDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Queries\ComplexQueryHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
